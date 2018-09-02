@@ -15,6 +15,9 @@
 
 // LENGTH macro borrowed from dwm
 #define LENGTH(X)               (sizeof X / sizeof X[0])
+#define SHIFT (0x1)
+#define CTRL (0x4)
+#define ALT (0x8)
 #define CMD (0x40)
 
 void dmenu_run(void *param);
@@ -51,6 +54,7 @@ struct hotkey hotkeys[] = {
 	//{CMD, XK_R, shell, "`dmenu </dev/null`", 0},
 	{CMD, XK_R, dmenu_run, 0, 0},
 	{CMD, XK_W, spawn, "pass_chooser", 0},
+	{CMD|SHIFT, XK_W, spawn, "pass_qr_chooser", 0},
 };
 
 int main()
