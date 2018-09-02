@@ -152,11 +152,9 @@ void spawn(void *program)
 
 void spawna(void *args)
 {
-	char * const *cargs = args;
-
 	pid_t pid = fork();
 	if (pid == 0) {
-		execvp(cargs[0], cargs);
+		execvp(((const char* const*)args)[0], (char* const*)args);
 		err(-1, "exec");
 	}
 } 
