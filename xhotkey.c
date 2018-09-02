@@ -43,6 +43,7 @@ struct hotkey hotkeys[] = {
 	{0, XK_F4, spawn, "thunar", 0},
 	{CMD, XK_F5, test, "hello", 0},
 
+	{0, XK_F6, spawn, "mumble", 0},
 	{0, XK_F7, spawn, "switch-headphones-alsa", 0},
 	{0, XK_F8, spawn, "switch-lineout-alsa", 0},
 
