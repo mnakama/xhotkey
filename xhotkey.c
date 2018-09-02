@@ -56,11 +56,14 @@ struct hotkey hotkeys[] = {
 int main()
 {
 	Display *dpy = XOpenDisplay(0);
+	if (dpy == NULL) errx(1, "Failed to open X display");
+
 	Window root = DefaultRootWindow(dpy);
 	XEvent ev;
 
 	Bool owner_events = False;
 	
+	// close stdin to keep the forks from reading console input
 	close(0);
 
 	for (int i=0; i < LENGTH(hotkeys); i++) {
@@ -106,7 +109,7 @@ void dmenu_run(void *param)
 		close(filedes[1]);
 
 		execlp("dmenu", "dmenu", NULL);
-		err(1, "Error");
+		err(1, "exec dmenu");
 
 	} else {
 		//printf("waiting\n");
@@ -129,7 +132,7 @@ void dmenu_run(void *param)
 
 		pid = fork();
 		if (pid == 0) execlp("/bin/sh", "sh", "-c", buffer, NULL);
-		err(-1, "exec");
+		err(-1, "exec dmenu command");
 	}
 }
 
@@ -138,7 +141,7 @@ void shell(void *command)
 	pid_t pid = fork();
 	if (pid == 0) {
 		execlp("/bin/sh", "sh", "-c", command, NULL);
-		err(-1, "exec");
+		err(-1, "exec shell");
 	}
 }
 
