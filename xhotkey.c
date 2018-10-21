@@ -2,6 +2,7 @@
 #include <err.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -73,6 +74,8 @@ int main()
 	
 	// close stdin to keep the forks from reading console input
 	close(0);
+
+	signal(SIGCHLD, SIG_IGN);
 
 	for (int i=0; i < LENGTH(hotkeys); i++) {
 		KeyCode keycode = XKeysymToKeycode(dpy, hotkeys[i].keysym);
