@@ -55,6 +55,10 @@ struct hotkey hotkeys[] = {
 	{CMD, XK_R, dmenu_run, 0, 0},
 	{CMD, XK_W, spawn, "pass_chooser", 0},
 	{CMD|SHIFT, XK_W, spawn, "pass_qr_chooser", 0},
+
+	{CMD, XK_minus, spawn, "psi", 0},
+	{CMD, XK_slash, spawn, "telegram-desktop", 0},
+	{CMD, XK_equal, spawn, "discord", 0},
 };
 
 int main()
