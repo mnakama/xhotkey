@@ -21,6 +21,8 @@
 #define ALT (0x8)
 #define CMD (0x40)
 
+#define NUMLOCK (0x10)
+
 void dmenu_run(void *param);
 void spawn(void *program);
 void spawna(void *args);
@@ -81,15 +83,19 @@ int main()
 		KeyCode keycode = XKeysymToKeycode(dpy, hotkeys[i].keysym);
 		hotkeys[i].keycode = keycode;
 		XGrabKey(dpy, keycode, hotkeys[i].mods, root, owner_events, GrabModeAsync, GrabModeAsync);
+		XGrabKey(dpy, keycode, hotkeys[i].mods|NUMLOCK, root, owner_events, GrabModeAsync, GrabModeAsync);
 	}
 
 	XSelectInput(dpy, root, KeyPressMask);
 	while (true) {
+		unsigned int mods;
 		XNextEvent(dpy, &ev);
 		switch (ev.type) {
 			case KeyPress:
+				mods = ev.xkey.state;
+				mods = (mods & ~NUMLOCK);
 				for (int i=0; i < LENGTH(hotkeys); i++) {
-					if (hotkeys[i].keycode == ev.xkey.keycode && hotkeys[i].mods == ev.xkey.state) {
+					if (hotkeys[i].keycode == ev.xkey.keycode && hotkeys[i].mods == mods) {
 						printf("Keypress: %s mods: 0x%x\n", XKeysymToString(hotkeys[i].keysym), ev.xkey.state);
 						hotkeys[i].action(hotkeys[i].param);
 					}
