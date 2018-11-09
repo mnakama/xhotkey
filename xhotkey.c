@@ -43,6 +43,13 @@ struct hotkey hotkeys[] = {
 	{0, XF86XK_AudioRaiseVolume, spawna, (const char*[]){"amixer", "set", "Master", "2%+", NULL}, 0},
 	{0, XF86XK_AudioMute, spawna, (const char*[]){"amixer", "set", "Master", "toggle", NULL}, 0},
 
+	{CMD, XF86XK_AudioLowerVolume, spawna, (const char*[]){"mpc", "volume", "-1", NULL}, 0},
+	{CMD, XF86XK_AudioRaiseVolume, spawna, (const char*[]){"mpc", "volume", "+1", NULL}, 0},
+	{SHIFT, XF86XK_AudioLowerVolume, spawna, (const char*[]){"mpc", "volume", "-5", NULL}, 0},
+	{SHIFT, XF86XK_AudioRaiseVolume, spawna, (const char*[]){"mpc", "volume", "+5", NULL}, 0},
+	{CTRL, XF86XK_AudioLowerVolume, spawna, (const char*[]){"mpc", "volume", "-10", NULL}, 0},
+	{CTRL, XF86XK_AudioRaiseVolume, spawna, (const char*[]){"mpc", "volume", "+10", NULL}, 0},
+
 	{0, XK_F1, spawn, "firefox", 0},
 	{0, XK_F2, spawn, "/home/matt/bin/claws-mail", 0},
 	{0, XK_F3, spawn, "surf", 0},
