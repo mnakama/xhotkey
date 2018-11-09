@@ -70,7 +70,7 @@ struct hotkey hotkeys[] = {
 	{CMD, XK_minus, spawn, "psi", 0},
 	{CMD, XK_slash, spawn, "telegram-desktop", 0},
 	{CMD, XK_equal, spawn, "discord", 0},
-	{CMD|SHIFT, XK_minus, spawn, "slack", 0},
+	{CMD|SHIFT, XK_minus, spawna, (const char*[]){"chromium", "--app=https://teltech.slack.com", NULL}, 0},
 };
 
 int main()
