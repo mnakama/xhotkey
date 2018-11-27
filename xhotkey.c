@@ -16,6 +16,7 @@
 
 // LENGTH macro borrowed from dwm
 #define LENGTH(X)               (sizeof X / sizeof X[0])
+#define ARGS(...)				(const char*[]){__VA_ARGS__, NULL}
 #define SHIFT (0x1)
 #define CTRL (0x4)
 #define ALT (0x8)
@@ -42,17 +43,17 @@ struct hotkey {
 };
 
 struct hotkey hotkeys[] = {
-	{0, XF86XK_AudioLowerVolume, spawna, (const char*[]){"amixer", "set", "Master", "2%-", NULL}, 0},
-	{0, XF86XK_AudioRaiseVolume, spawna, (const char*[]){"amixer", "set", "Master", "2%+", NULL}, 0},
-	{0, XF86XK_AudioMute, spawna, (const char*[]){"amixer", "set", "Master", "toggle", NULL}, 0},
-	{CMD, XF86XK_AudioMute, spawna, (const char*[]){terminal, "alsamixer", NULL}, 0},
+	{0, XF86XK_AudioLowerVolume, spawna, ARGS("amixer", "set", "Master", "2%-"), 0},
+	{0, XF86XK_AudioRaiseVolume, spawna, ARGS("amixer", "set", "Master", "2%+"), 0},
+	{0, XF86XK_AudioMute, spawna, ARGS("amixer", "set", "Master", "toggle"), 0},
+	{CMD, XF86XK_AudioMute, spawna, ARGS(terminal, "alsamixer"), 0},
 
-	{CMD, XF86XK_AudioLowerVolume, spawna, (const char*[]){"mpc", "volume", "-1", NULL}, 0},
-	{CMD, XF86XK_AudioRaiseVolume, spawna, (const char*[]){"mpc", "volume", "+1", NULL}, 0},
-	{SHIFT, XF86XK_AudioLowerVolume, spawna, (const char*[]){"mpc", "volume", "-5", NULL}, 0},
-	{SHIFT, XF86XK_AudioRaiseVolume, spawna, (const char*[]){"mpc", "volume", "+5", NULL}, 0},
-	{CTRL, XF86XK_AudioLowerVolume, spawna, (const char*[]){"mpc", "volume", "-10", NULL}, 0},
-	{CTRL, XF86XK_AudioRaiseVolume, spawna, (const char*[]){"mpc", "volume", "+10", NULL}, 0},
+	{CMD, XF86XK_AudioLowerVolume, spawna, ARGS("mpc", "volume", "-1"), 0},
+	{CMD, XF86XK_AudioRaiseVolume, spawna, ARGS("mpc", "volume", "+1"), 0},
+	{SHIFT, XF86XK_AudioLowerVolume, spawna, ARGS("mpc", "volume", "-5"), 0},
+	{SHIFT, XF86XK_AudioRaiseVolume, spawna, ARGS("mpc", "volume", "+5"), 0},
+	{CTRL, XF86XK_AudioLowerVolume, spawna, ARGS("mpc", "volume", "-10"), 0},
+	{CTRL, XF86XK_AudioRaiseVolume, spawna, ARGS("mpc", "volume", "+10"), 0},
 
 	{CMD, XK_F1, spawn, "firefox", 0},
 	{CMD, XK_F2, spawn, "/home/matt/bin/claws-mail", 0},
@@ -64,19 +65,19 @@ struct hotkey hotkeys[] = {
 	{CMD, XK_F7, spawn, "switch-headphones-alsa", 0},
 	{CMD, XK_F8, spawn, "switch-lineout-alsa", 0},
 
-	{CMD, XK_V, spawna, (const char*[]){terminal, editor, NULL}, 0},
-	{CMD|SHIFT, XK_V, spawna, (const char*[]){terminal, editor, ".", NULL}, 0},
+	{CMD, XK_V, spawna, ARGS(terminal, editor), 0},
+	{CMD|SHIFT, XK_V, spawna, ARGS(terminal, editor, "."), 0},
 
 	{CMD, XK_G, spawn, "dmenu-surf.sh", 0},
 	{CMD, XK_R, dmenu_run, 0, 0},
 	{CMD, XK_W, spawn, "pass_chooser", 0},
 	{CMD|SHIFT, XK_W, spawn, "pass_qr_chooser", 0},
-	{CMD|SHIFT, XK_L, spawna, (const char*[]){"xscreensaver-command", "-lock", NULL}, 0},
+	{CMD|SHIFT, XK_L, spawna, ARGS("xscreensaver-command", "-lock"), 0},
 
 	{CMD, XK_minus, spawn, "psi", 0},
 	{CMD, XK_slash, spawn, "telegram-desktop", 0},
 	{CMD, XK_equal, spawn, "discord", 0},
-	{CMD|SHIFT, XK_minus, spawna, (const char*[]){"chromium", "--app=https://teltech.slack.com", NULL}, 0},
+	{CMD|SHIFT, XK_minus, spawna, ARGS("chromium", "--app=https://teltech.slack.com"), 0},
 	{CMD|SHIFT, XK_slash, spawn, "signal-desktop", 0},
 };
 
