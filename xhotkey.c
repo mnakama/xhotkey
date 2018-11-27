@@ -146,29 +146,23 @@ void dmenu_run(void *param)
 		execlp("dmenu", "dmenu", NULL);
 		err(1, "exec dmenu");
 
-	} else {
-		//printf("waiting\n");
-		//int wstatus;
-		char buffer[4096];
-		close(filedes[1]);
-
-		// no need to wait since we have a pipe
-		//if (waitpid(pid, &wstatus, 0) == -1) err(-1, "waitpid");
-
-
-		int rcount = read(filedes[0], buffer, sizeof(buffer));
-		if (rcount == -1) err(-1, "read");
-		close(filedes[0]);
-
-		buffer[rcount] = 0;
-		if (buffer[rcount-1] == '\n') buffer[rcount-1] = 0;
-
-		printf("running command: %s\n", buffer);
-
-		pid = fork();
-		if (pid == 0) execlp("/bin/sh", "sh", "-c", buffer, NULL);
-		err(-1, "exec dmenu command");
 	}
+
+	char buffer[4096];
+	close(filedes[1]);
+
+	int rcount = read(filedes[0], buffer, sizeof(buffer));
+	if (rcount == -1) err(-1, "read");
+	close(filedes[0]);
+
+	buffer[rcount] = 0;
+	if (buffer[rcount-1] == '\n') buffer[rcount-1] = 0;
+
+	printf("running command: %s\n", buffer);
+
+	signal(SIGCHLD, SIG_DFL); // Python will fail its Popen calls without this
+	execlp("/bin/sh", "sh", "-c", buffer, NULL);
+	err(-1, "exec dmenu command");
 }
 
 void shell(void *command)
