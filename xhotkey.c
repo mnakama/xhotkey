@@ -69,6 +69,7 @@ struct hotkey hotkeys[] = {
 	{CMD|SHIFT, XK_V, spawna, ARGS(terminal, editor, "."), 0},
 
 	{CMD, XK_G, spawn, "dmenu-surf.sh", 0},
+	{CMD|SHIFT, XK_H, spawn, "dmenu-man", 0},
 	{CMD, XK_R, dmenu_run, 0, 0},
 	{CMD, XK_W, spawn, "pass_chooser", 0},
 	{CMD|SHIFT, XK_W, spawn, "pass_qr_chooser", 0},
