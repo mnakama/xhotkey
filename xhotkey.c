@@ -29,6 +29,9 @@ void spawna(void *args);
 void shell(void *command);
 void test(void *param);
 
+const char terminal[] = "st";
+const char editor[] = "nvim";
+
 struct hotkey {
 	unsigned int mods;
 	KeySym keysym;
@@ -42,6 +45,7 @@ struct hotkey hotkeys[] = {
 	{0, XF86XK_AudioLowerVolume, spawna, (const char*[]){"amixer", "set", "Master", "2%-", NULL}, 0},
 	{0, XF86XK_AudioRaiseVolume, spawna, (const char*[]){"amixer", "set", "Master", "2%+", NULL}, 0},
 	{0, XF86XK_AudioMute, spawna, (const char*[]){"amixer", "set", "Master", "toggle", NULL}, 0},
+	{CMD, XF86XK_AudioMute, spawna, (const char*[]){terminal, "alsamixer", NULL}, 0},
 
 	{CMD, XF86XK_AudioLowerVolume, spawna, (const char*[]){"mpc", "volume", "-1", NULL}, 0},
 	{CMD, XF86XK_AudioRaiseVolume, spawna, (const char*[]){"mpc", "volume", "+1", NULL}, 0},
@@ -50,18 +54,20 @@ struct hotkey hotkeys[] = {
 	{CTRL, XF86XK_AudioLowerVolume, spawna, (const char*[]){"mpc", "volume", "-10", NULL}, 0},
 	{CTRL, XF86XK_AudioRaiseVolume, spawna, (const char*[]){"mpc", "volume", "+10", NULL}, 0},
 
-	{0, XK_F1, spawn, "firefox", 0},
-	{0, XK_F2, spawn, "/home/matt/bin/claws-mail", 0},
-	{0, XK_F3, spawn, "surf", 0},
-	{0, XK_F4, spawn, "thunar", 0},
+	{CMD, XK_F1, spawn, "firefox", 0},
+	{CMD, XK_F2, spawn, "/home/matt/bin/claws-mail", 0},
+	{CMD, XK_F3, spawn, "surf", 0},
+	{CMD, XK_F4, spawn, "thunar", 0},
 	{CMD, XK_F5, test, "hello", 0},
 
-	{0, XK_F6, spawn, "mumble", 0},
-	{0, XK_F7, spawn, "switch-headphones-alsa", 0},
-	{0, XK_F8, spawn, "switch-lineout-alsa", 0},
+	{CMD, XK_F6, spawn, "mumble", 0},
+	{CMD, XK_F7, spawn, "switch-headphones-alsa", 0},
+	{CMD, XK_F8, spawn, "switch-lineout-alsa", 0},
+
+	{CMD, XK_V, spawna, (const char*[]){terminal, editor, NULL}, 0},
+	{CMD|SHIFT, XK_V, spawna, (const char*[]){terminal, editor, ".", NULL}, 0},
 
 	{CMD, XK_G, spawn, "dmenu-surf.sh", 0},
-	//{CMD, XK_R, shell, "`dmenu </dev/null`", 0},
 	{CMD, XK_R, dmenu_run, 0, 0},
 	{CMD, XK_W, spawn, "pass_chooser", 0},
 	{CMD|SHIFT, XK_W, spawn, "pass_qr_chooser", 0},
@@ -71,6 +77,7 @@ struct hotkey hotkeys[] = {
 	{CMD, XK_slash, spawn, "telegram-desktop", 0},
 	{CMD, XK_equal, spawn, "discord", 0},
 	{CMD|SHIFT, XK_minus, spawna, (const char*[]){"chromium", "--app=https://teltech.slack.com", NULL}, 0},
+	{CMD|SHIFT, XK_slash, spawn, "signal-desktop", 0},
 };
 
 int main()
