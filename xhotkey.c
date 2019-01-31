@@ -57,7 +57,7 @@ struct hotkey hotkeys[] = {
 
 	{CMD, XK_F1, spawn, "firefox", 0},
 	{CMD, XK_F2, spawn, "/home/matt/bin/claws-mail", 0},
-	{CMD, XK_F3, spawn, "surf", 0},
+	{CMD, XK_F3, spawn, "chromium", 0},
 	{CMD, XK_F4, spawn, "thunar", 0},
 	{CMD, XK_F5, test, "hello", 0},
 
@@ -68,6 +68,7 @@ struct hotkey hotkeys[] = {
 	{CMD, XK_V, spawna, ARGS(terminal, editor), 0},
 	{CMD|SHIFT, XK_V, spawna, ARGS(terminal, editor, "."), 0},
 
+	{CMD|SHIFT|CTRL, XK_Return, spawna, ARGS("st", "-f", "spleen:pixelsize=24:antialias=fales:autohint=false"), 0},
 	{CMD, XK_G, spawn, "dmenu-surf.sh", 0},
 	{CMD|SHIFT, XK_H, spawn, "dmenu-man", 0},
 	{CMD, XK_R, dmenu_run, 0, 0},
@@ -78,7 +79,7 @@ struct hotkey hotkeys[] = {
 	{CMD, XK_minus, spawn, "psi", 0},
 	{CMD, XK_slash, spawn, "telegram-desktop", 0},
 	{CMD, XK_equal, spawn, "discord", 0},
-	{CMD|SHIFT, XK_minus, spawna, ARGS("chromium", "--app=https://teltech.slack.com"), 0},
+	{CMD|SHIFT, XK_minus, spawn, "slack", 0},
 	{CMD|SHIFT, XK_slash, spawn, "signal-desktop", 0},
 };
 
@@ -91,7 +92,7 @@ int main()
 	XEvent ev;
 
 	Bool owner_events = False;
-	
+
 	// close stdin to keep the forks from reading console input
 	close(0);
 
@@ -132,7 +133,7 @@ void dmenu_run(void *param)
 {
 	pid_t pid = fork();
 	if (pid != 0) return;
-	
+
 	int filedes[2];
 	if (pipe(filedes) == -1) err(-1, "pipe");
 
@@ -190,7 +191,7 @@ void spawna(void *args)
 		execvp(((const char* const*)args)[0], (char* const*)args);
 		err(-1, "exec");
 	}
-} 
+}
 
 void test(void *param)
 {
