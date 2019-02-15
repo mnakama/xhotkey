@@ -65,10 +65,12 @@ struct hotkey hotkeys[] = {
 	{CMD, XK_F7, spawn, "switch-headphones-alsa", 0},
 	{CMD, XK_F8, spawn, "switch-lineout-alsa", 0},
 
+	{CMD, XK_E, spawn, "emacs", 0},
+	{CMD|SHIFT, XK_E, spawna, ARGS("emacs", "."), 0},
 	{CMD, XK_V, spawna, ARGS(terminal, editor), 0},
 	{CMD|SHIFT, XK_V, spawna, ARGS(terminal, editor, "."), 0},
 
-	{CMD|SHIFT|CTRL, XK_Return, spawna, ARGS("st", "-f", "spleen:pixelsize=24:antialias=fales:autohint=false"), 0},
+	{CMD|SHIFT|CTRL, XK_Return, spawna, ARGS("st", "-f", "spleen:pixelsize=24:antialias=false:autohint=false"), 0},
 	{CMD, XK_G, spawn, "dmenu-surf.sh", 0},
 	{CMD|SHIFT, XK_H, spawn, "dmenu-man", 0},
 	{CMD, XK_R, dmenu_run, 0, 0},
