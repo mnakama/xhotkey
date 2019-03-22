@@ -42,6 +42,10 @@ struct hotkey {
 	KeyCode keycode; // filled in during run
 };
 
+struct hotkey releasekeys[] = {
+	{0, XK_F9, shell, "xdotool type --delay 0 --clearmodifiers -- \"`xclip -o`\"", 0},
+};
+
 struct hotkey hotkeys[] = {
 	{0, XF86XK_AudioLowerVolume, spawna, ARGS("amixer", "set", "Master", "2%-"), 0},
 	{0, XF86XK_AudioRaiseVolume, spawna, ARGS("amixer", "set", "Master", "2%+"), 0},
@@ -54,6 +58,12 @@ struct hotkey hotkeys[] = {
 	{SHIFT, XF86XK_AudioRaiseVolume, spawna, ARGS("mpc", "volume", "+5"), 0},
 	{CTRL, XF86XK_AudioLowerVolume, spawna, ARGS("mpc", "volume", "-10"), 0},
 	{CTRL, XF86XK_AudioRaiseVolume, spawna, ARGS("mpc", "volume", "+10"), 0},
+
+	{0, XF86XK_AudioPlay, spawna, ARGS("mpc", "-q", "toggle"), 0},
+	{CMD, XF86XK_AudioPlay, spawna, ARGS("mpc", "-q", "stop"), 0},
+	{SHIFT, XF86XK_AudioPlay, spawna, ARGS("sh", "-c", "notify-send \"`mpc current`\""), 0},
+	{0, XF86XK_AudioNext, spawna, ARGS("mpc", "-q", "next"), 0},
+	{0, XF86XK_AudioPrev, spawna, ARGS("mpc", "-q", "prev"), 0},
 
 	{CMD, XK_F1, spawn, "firefox", 0},
 	{CMD, XK_F2, spawn, "/home/matt/bin/claws-mail", 0},
@@ -72,6 +82,8 @@ struct hotkey hotkeys[] = {
 
 	{CMD|SHIFT|CTRL, XK_Return, spawna, ARGS("st", "-f", "spleen:pixelsize=24:antialias=false:autohint=false"), 0},
 	{CMD, XK_G, spawn, "dmenu-surf.sh", 0},
+	{CMD, XK_Y, shell, "surf `xclip -o`", 0},
+	{CMD|SHIFT, XK_Y, shell, "surf `xclip -o -selection clipboard`", 0},
 	{CMD|SHIFT, XK_H, spawn, "dmenu-man", 0},
 	{CMD, XK_R, dmenu_run, 0, 0},
 	{CMD, XK_W, spawn, "pass_chooser", 0},
@@ -107,6 +119,13 @@ int main()
 		XGrabKey(dpy, keycode, hotkeys[i].mods|NUMLOCK, root, owner_events, GrabModeAsync, GrabModeAsync);
 	}
 
+	for (int i=0; i < LENGTH(releasekeys); i++) {
+		KeyCode keycode = XKeysymToKeycode(dpy, releasekeys[i].keysym);
+		releasekeys[i].keycode = keycode;
+		XGrabKey(dpy, keycode, releasekeys[i].mods, root, owner_events, GrabModeAsync, GrabModeAsync);
+		XGrabKey(dpy, keycode, releasekeys[i].mods|NUMLOCK, root, owner_events, GrabModeAsync, GrabModeAsync);
+	}
+
 	XSelectInput(dpy, root, KeyPressMask);
 	while (true) {
 		unsigned int mods;
@@ -119,6 +138,16 @@ int main()
 					if (hotkeys[i].keycode == ev.xkey.keycode && hotkeys[i].mods == mods) {
 						printf("Keypress: %s mods: 0x%x\n", XKeysymToString(hotkeys[i].keysym), ev.xkey.state);
 						hotkeys[i].action(hotkeys[i].param);
+					}
+				}
+				break;
+			case KeyRelease:
+				mods = ev.xkey.state;
+				mods = (mods & ~NUMLOCK);
+				for (int i=0; i < LENGTH(releasekeys); i++) {
+					if (releasekeys[i].keycode == ev.xkey.keycode && releasekeys[i].mods == mods) {
+						printf("Keypress: %s mods: 0x%x\n", XKeysymToString(releasekeys[i].keysym), ev.xkey.state);
+						releasekeys[i].action(releasekeys[i].param);
 					}
 				}
 				break;
