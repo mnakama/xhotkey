@@ -67,7 +67,7 @@ struct hotkey hotkeys[] = {
 
 	{CMD, XK_F1, spawn, "firefox", 0},
 	{CMD, XK_F2, spawn, "/home/matt/bin/claws-mail", 0},
-	{CMD, XK_F3, spawn, "chromium", 0},
+	{CMD, XK_F3, spawn, "qutebrowser", 0},
 	{CMD, XK_F4, spawn, "thunar", 0},
 	{CMD, XK_F5, test, "hello", 0},
 
