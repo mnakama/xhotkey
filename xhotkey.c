@@ -201,6 +201,7 @@ void shell(void *command)
 {
 	pid_t pid = fork();
 	if (pid == 0) {
+		signal(SIGCHLD, SIG_DFL); // Python will fail its Popen calls without this
 		execlp("/bin/sh", "sh", "-c", command, NULL);
 		err(-1, "exec shell");
 	}
@@ -210,6 +211,7 @@ void spawn(void *program)
 {
 	pid_t pid = fork();
 	if (pid == 0) {
+		signal(SIGCHLD, SIG_DFL); // Python will fail its Popen calls without this
 		execlp(program, program, NULL);
 		err(-1, "exec");
 	}
@@ -219,6 +221,7 @@ void spawna(void *args)
 {
 	pid_t pid = fork();
 	if (pid == 0) {
+		signal(SIGCHLD, SIG_DFL); // Python will fail its Popen calls without this
 		execvp(((const char* const*)args)[0], (char* const*)args);
 		err(-1, "exec");
 	}
