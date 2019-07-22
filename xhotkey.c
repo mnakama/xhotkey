@@ -61,7 +61,7 @@ struct hotkey hotkeys[] = {
 
 	{0, XF86XK_AudioPlay, spawna, ARGS("mpc", "-q", "toggle"), 0},
 	{CMD, XF86XK_AudioPlay, spawna, ARGS("mpc", "-q", "stop"), 0},
-	{SHIFT, XF86XK_AudioPlay, spawna, ARGS("sh", "-c", "notify-send \"`mpc current`\""), 0},
+	{SHIFT, XF86XK_AudioPlay, spawna, ARGS("sh", "-c", "notify-send \"`mpc -f '\%title\%' current`\" \"`mpc -f '\%album\%\\n\\n\%artist\%' current`\""), 0},
 	{0, XF86XK_AudioNext, spawna, ARGS("mpc", "-q", "next"), 0},
 	{0, XF86XK_AudioPrev, spawna, ARGS("mpc", "-q", "prev"), 0},
 
