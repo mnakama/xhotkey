@@ -92,7 +92,7 @@ struct hotkey hotkeys[] = {
 
 	{CMD, XK_minus, spawn, "psi", 0},
 	{CMD, XK_slash, spawn, "telegram-desktop", 0},
-	{CMD, XK_equal, spawna, ARGS("apulse", "discord"), 0},
+	{CMD, XK_equal, spawn, "discord", 0},
 	{CMD|SHIFT, XK_minus, spawn, "slack", 0},
 	{CMD|SHIFT|CTRL, XK_minus, spawna, ARGS("kitty", "weechat"), 0},
 	{CMD|SHIFT, XK_slash, spawn, "signal-desktop", 0},
