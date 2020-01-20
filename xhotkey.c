@@ -44,6 +44,7 @@ struct hotkey {
 
 struct hotkey releasekeys[] = {
 	{0, XK_F9, shell, "xdotool type --delay 0 --clearmodifiers -- \"`xclip -o`\"", 0},
+	{0, XK_F11, spawna, ARGS("/usr/bin/scrot", "-s", "/tmp/screenshot.png"), 0},
 };
 
 struct hotkey hotkeys[] = {
