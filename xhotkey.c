@@ -52,6 +52,7 @@ struct hotkey hotkeys[] = {
 	{0, XF86XK_AudioRaiseVolume, spawna, ARGS("amixer", "set", "Master", "2%+"), 0},
 	{0, XF86XK_AudioMute, spawna, ARGS("amixer", "set", "Master", "toggle"), 0},
 	{CMD, XF86XK_AudioMute, spawna, ARGS(terminal, "alsamixer"), 0},
+	{SHIFT, XF86XK_AudioMute, spawn, "pavucontrol", 0},
 
 	{CMD, XF86XK_AudioLowerVolume, spawna, ARGS("mpc", "volume", "-1"), 0},
 	{CMD, XF86XK_AudioRaiseVolume, spawna, ARGS("mpc", "volume", "+1"), 0},
@@ -75,6 +76,7 @@ struct hotkey hotkeys[] = {
 	{CMD, XK_F6, spawn, "mumble", 0},
 	{CMD, XK_F7, spawn, "switch-headphones-alsa", 0},
 	{CMD, XK_F8, spawn, "switch-lineout-alsa", 0},
+	{CMD, XK_F12, spawna, ARGS(terminal, "zsh", "-c", "cd ~/projects/xhotkey && $EDITOR xhotkey.c && make && killall xhotkey; cd && ~/projects/xhotkey/xhotkey &!"), 0},
 
 	{CMD, XK_E, spawn, "emacs", 0},
 	{CMD|SHIFT, XK_E, spawna, ARGS("emacs", "."), 0},
