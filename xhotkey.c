@@ -48,10 +48,18 @@ struct hotkey releasekeys[] = {
 };
 
 struct hotkey hotkeys[] = {
-	{0, XF86XK_AudioLowerVolume, spawna, ARGS("amixer", "set", "Master", "2%-"), 0},
+	// alsa
+	/*{0, XF86XK_AudioLowerVolume, spawna, ARGS("amixer", "set", "Master", "2%-"), 0},
 	{0, XF86XK_AudioRaiseVolume, spawna, ARGS("amixer", "set", "Master", "2%+"), 0},
 	{0, XF86XK_AudioMute, spawna, ARGS("amixer", "set", "Master", "toggle"), 0},
-	{CMD, XF86XK_AudioMute, spawna, ARGS(terminal, "alsamixer"), 0},
+	*/
+
+	// pulse
+	{0, XF86XK_AudioLowerVolume, spawna, ARGS("pactl", "set-sink-volume", "@DEFAULT_SINK@", "-2%"), 0},
+	{0, XF86XK_AudioRaiseVolume, spawna, ARGS("pactl", "set-sink-volume", "@DEFAULT_SINK@", "+2%"), 0},
+	{0, XF86XK_AudioMute, spawna, ARGS("pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle"), 0},
+
+	{CMD, XF86XK_AudioMute, spawna, ARGS(terminal, "alsamixer", "-c0"), 0},
 	{SHIFT, XF86XK_AudioMute, spawn, "pavucontrol", 0},
 
 	{CMD, XF86XK_AudioLowerVolume, spawna, ARGS("mpc", "volume", "-1"), 0},
@@ -61,21 +69,35 @@ struct hotkey hotkeys[] = {
 	{CTRL, XF86XK_AudioLowerVolume, spawna, ARGS("mpc", "volume", "-10"), 0},
 	{CTRL, XF86XK_AudioRaiseVolume, spawna, ARGS("mpc", "volume", "+10"), 0},
 
-	{0, XF86XK_AudioPlay, spawna, ARGS("mpc", "-q", "toggle"), 0},
+	// mpc
+	/*{0, XF86XK_AudioPlay, spawna, ARGS("mpc", "-q", "toggle"), 0},
 	{CMD, XF86XK_AudioPlay, spawna, ARGS("mpc", "-q", "stop"), 0},
 	{SHIFT, XF86XK_AudioPlay, spawna, ARGS("sh", "-c", "notify-send \"`mpc -f '\%title\%' current`\" \"`mpc -f '\%album\%\\n\\n\%artist\%' current`\""), 0},
 	{0, XF86XK_AudioNext, spawna, ARGS("mpc", "-q", "next"), 0},
-	{0, XF86XK_AudioPrev, spawna, ARGS("mpc", "-q", "prev"), 0},
+	{0, XF86XK_AudioPrev, spawna, ARGS("mpc", "-q", "prev"), 0},*/
+
+	// spotify
+	// https://foxypanda.me/spotify-playback-and-volume-control-using-keyboard-shortcuts-on-linux/
+	{0, XF86XK_AudioPlay, spawna, ARGS("dbus-send", "--print-reply", "--dest=org.mpris.MediaPlayer2.spotify", "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.PlayPause"), 0},
+	{CMD, XF86XK_AudioPlay, spawna, ARGS("dbus-send", "--print-reply", "--dest=org.mpris.MediaPlayer2.spotify",
+		"/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.Stop"), 0},
+	{0, XF86XK_AudioNext, spawna, ARGS("dbus-send", "--print-reply", "--dest=org.mpris.MediaPlayer2.spotify",
+		"/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.Next"), 0},
+	{0, XF86XK_AudioPrev, spawna, ARGS("dbus-send", "--print-reply", "--dest=org.mpris.MediaPlayer2.spotify",
+		"/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.Previous"), 0},
 
 	{CMD, XK_F1, spawn, "firefox", 0},
 	{CMD, XK_F2, spawn, "/home/matt/bin/claws-mail", 0},
+	{CMD|SHIFT, XK_F2, spawn, "thunderbird", 0},
 	{CMD, XK_F3, spawn, "qutebrowser", 0},
 	{CMD, XK_F4, spawn, "thunar", 0},
 	{CMD, XK_F5, test, "hello", 0},
 
 	{CMD, XK_F6, spawn, "mumble", 0},
-	{CMD, XK_F7, spawn, "switch-headphones-alsa", 0},
-	{CMD, XK_F8, spawn, "switch-lineout-alsa", 0},
+	//{CMD, XK_F7, spawn, "switch-headphones-alsa", 0},
+	//{CMD, XK_F8, spawn, "switch-lineout-alsa", 0},
+	{CMD, XK_F7, spawn, "switch-headphones-pa", 0},
+	{CMD, XK_F8, spawn, "switch-lineout-pa", 0},
 	{CMD, XK_F12, spawna, ARGS(terminal, "zsh", "-c", "cd ~/projects/xhotkey && $EDITOR xhotkey.c && make && killall xhotkey; cd && ~/projects/xhotkey/xhotkey &!"), 0},
 
 	{CMD, XK_E, spawn, "emacs", 0},
@@ -94,11 +116,10 @@ struct hotkey hotkeys[] = {
 	{CMD|SHIFT, XK_L, spawna, ARGS("xscreensaver-command", "-lock"), 0},
 
 	{CMD, XK_minus, spawn, "psi", 0},
-	{CMD, XK_slash, spawn, "telegram-desktop", 0},
+	{CMD, XK_slash, spawn, "element-desktop", 0},
+	{CMD|SHIFT, XK_slash, spawna, ARGS("element-desktop", "--profile bobrtc"), 0},
 	{CMD, XK_equal, spawn, "discord", 0},
 	{CMD|SHIFT, XK_minus, spawn, "slack", 0},
-	{CMD|SHIFT|CTRL, XK_minus, spawna, ARGS("kitty", "weechat"), 0},
-	{CMD|SHIFT, XK_slash, spawn, "signal-desktop", 0},
 };
 
 int main()
