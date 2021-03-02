@@ -29,6 +29,7 @@ void spawn(void *program);
 void spawna(void *args);
 void shell(void *command);
 void test(void *param);
+void screenshot(void *args);
 
 const char terminal[] = "st";
 const char editor[] = "nvim";
@@ -44,7 +45,7 @@ struct hotkey {
 
 struct hotkey releasekeys[] = {
 	{0, XK_F9, shell, "xdotool type --delay 0 --clearmodifiers -- \"`xclip -o`\"", 0},
-	{0, XK_F11, spawna, ARGS("/usr/bin/scrot", "-s", "/tmp/screenshot.png"), 0},
+	{0, XK_F11, screenshot, NULL, 0},
 };
 
 struct hotkey hotkeys[] = {
@@ -252,7 +253,47 @@ void spawna(void *args)
 	}
 }
 
+int run(void *args)
+{
+	signal(SIGCHLD, SIG_DFL); // SIG_IGN would prevent us from getting child exit status
+
+	pid_t pid = fork();
+	if (pid == 0) {
+		execvp(((const char* const*)args)[0], (char* const*)args);
+		err(-1, "exec");
+	} else {
+
+		int wstatus = 0;
+		pid_t wpid = 0;
+		wpid = waitpid(pid, &wstatus, WUNTRACED | WCONTINUED);
+		if (wpid == -1) {
+			err(-1, "failed to waitpid");
+		}
+
+		if (!WIFEXITED(wstatus)) return -1;
+
+		int ret = WEXITSTATUS(wstatus);
+		return ret;
+	}
+	return 1;
+}
+
 void test(void *param)
 {
 	printf("test function: %s\n", (const char *)param);
+}
+
+void screenshot(void *param)
+{
+	pid_t pid = fork();
+	if (pid == 0) {
+		int ret = run(ARGS("/usr/bin/scrot", "-sfo", "/tmp/screenshot.png"));
+		if (ret != 0) {
+			errx(-1, "failed to take screenshot: %d", ret);
+		}
+		ret = run(ARGS("/usr/bin/xclip", "-selection", "clipboard", "-target", "image/png", "/tmp/screenshot.png"));
+		if (ret != 0) {
+			errx(-1, "failed to copy screenshot to clipboard: %d", ret);
+		}
+	}
 }
