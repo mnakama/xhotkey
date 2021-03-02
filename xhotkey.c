@@ -138,14 +138,14 @@ int main()
 
 	signal(SIGCHLD, SIG_IGN);
 
-	for (int i=0; i < LENGTH(hotkeys); i++) {
+	for (int i=0; i < (int)LENGTH(hotkeys); i++) {
 		KeyCode keycode = XKeysymToKeycode(dpy, hotkeys[i].keysym);
 		hotkeys[i].keycode = keycode;
 		XGrabKey(dpy, keycode, hotkeys[i].mods, root, owner_events, GrabModeAsync, GrabModeAsync);
 		XGrabKey(dpy, keycode, hotkeys[i].mods|NUMLOCK, root, owner_events, GrabModeAsync, GrabModeAsync);
 	}
 
-	for (int i=0; i < LENGTH(releasekeys); i++) {
+	for (int i=0; i < (int)LENGTH(releasekeys); i++) {
 		KeyCode keycode = XKeysymToKeycode(dpy, releasekeys[i].keysym);
 		releasekeys[i].keycode = keycode;
 		XGrabKey(dpy, keycode, releasekeys[i].mods, root, owner_events, GrabModeAsync, GrabModeAsync);
@@ -160,7 +160,7 @@ int main()
 			case KeyPress:
 				mods = ev.xkey.state;
 				mods = (mods & ~NUMLOCK);
-				for (int i=0; i < LENGTH(hotkeys); i++) {
+				for (int i=0; i < (int)LENGTH(hotkeys); i++) {
 					if (hotkeys[i].keycode == ev.xkey.keycode && hotkeys[i].mods == mods) {
 						printf("Keypress: %s mods: 0x%x\n", XKeysymToString(hotkeys[i].keysym), ev.xkey.state);
 						hotkeys[i].action(hotkeys[i].param);
@@ -170,7 +170,7 @@ int main()
 			case KeyRelease:
 				mods = ev.xkey.state;
 				mods = (mods & ~NUMLOCK);
-				for (int i=0; i < LENGTH(releasekeys); i++) {
+				for (int i=0; i < (int)LENGTH(releasekeys); i++) {
 					if (releasekeys[i].keycode == ev.xkey.keycode && releasekeys[i].mods == mods) {
 						printf("Keypress: %s mods: 0x%x\n", XKeysymToString(releasekeys[i].keysym), ev.xkey.state);
 						releasekeys[i].action(releasekeys[i].param);
@@ -186,7 +186,7 @@ int main()
 	return 0;
 }
 
-void dmenu_run(void *param)
+void dmenu_run(__attribute__((unused)) void *param)
 {
 	pid_t pid = fork();
 	if (pid != 0) return;
@@ -283,7 +283,7 @@ void test(void *param)
 	printf("test function: %s\n", (const char *)param);
 }
 
-void screenshot(void *param)
+void screenshot(__attribute__((unused)) void *param)
 {
 	pid_t pid = fork();
 	if (pid == 0) {
