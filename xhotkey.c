@@ -1,5 +1,6 @@
 #include <sys/wait.h>
 #include <err.h>
+#include <errno.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <signal.h>
@@ -28,6 +29,9 @@ void dmenu_run(void *param);
 void spawn(void *program);
 void spawna(void *args);
 void shell(void *command);
+void editSelf(void *param);
+void triggerRestart(void *param);
+void restart();
 void test(void *param);
 void screenshot(void *args);
 
@@ -49,6 +53,8 @@ struct hotkey releasekeys[] = {
 };
 
 struct hotkey hotkeys[] = {
+	{CMD|CTRL, XK_R, editSelf, NULL, 0},
+	{CMD|SHIFT, XK_R, triggerRestart, NULL, 0},
 	// alsa
 	/*{0, XF86XK_AudioLowerVolume, spawna, ARGS("amixer", "set", "Master", "2%-"), 0},
 	{0, XF86XK_AudioRaiseVolume, spawna, ARGS("amixer", "set", "Master", "2%+"), 0},
@@ -123,18 +129,43 @@ struct hotkey hotkeys[] = {
 	{CMD|SHIFT, XK_minus, spawn, "slack", 0},
 };
 
+Display *dpy;
+Window root;
+Bool doRestart = false;
+
+void cleanup()
+{
+	int ret = XCloseDisplay(dpy);
+	if (ret != 0) warn("XCloseDisplay failed: %d", ret);
+}
+
+void triggerRestart(__attribute__((unused)) void *param)
+{
+	doRestart = true;
+}
+
+void restart()
+{
+	const char bin[] = "/home/matt/projects/xhotkey/xhotkey";
+
+	execl(bin, bin, (const char*)NULL);
+	err(-1, "failed to restart xhotkey");
+}
+
 int main()
 {
-	Display *dpy = XOpenDisplay(0);
-	if (dpy == NULL) errx(1, "Failed to open X display");
+	// close stdin to keep the forks from reading console input
+	int ret = close(0);
+	if (ret == -1 && errno != EBADF) warn("failed to close stdin");
 
-	Window root = DefaultRootWindow(dpy);
+	dpy = XOpenDisplay(0);
+	if (dpy == NULL) errx(1, "Failed to open X display");
+	errno = 0;
+
+	root = DefaultRootWindow(dpy);
 	XEvent ev;
 
 	Bool owner_events = False;
-
-	// close stdin to keep the forks from reading console input
-	close(0);
 
 	signal(SIGCHLD, SIG_IGN);
 
@@ -153,7 +184,7 @@ int main()
 	}
 
 	XSelectInput(dpy, root, KeyPressMask);
-	while (true) {
+	while (!doRestart) {
 		unsigned int mods;
 		XNextEvent(dpy, &ev);
 		switch (ev.type) {
@@ -182,7 +213,10 @@ int main()
 		}
 	}
 
-	XCloseDisplay(dpy);
+	cleanup();
+
+	restart();
+
 	return 0;
 }
 
@@ -282,6 +316,12 @@ void test(void *param)
 {
 	printf("test function: %s\n", (const char *)param);
 }
+
+void editSelf(__attribute__((unused)) void *param)
+{
+	spawna(ARGS(terminal, editor, "/home/matt/projects/xhotkey/xhotkey.c"));
+}
+
 
 void screenshot(__attribute__((unused)) void *param)
 {
