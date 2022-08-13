@@ -55,16 +55,11 @@ struct hotkey releasekeys[] = {
 struct hotkey hotkeys[] = {
 	{CMD|CTRL, XK_R, editSelf, NULL, 0},
 	{CMD|SHIFT, XK_R, triggerRestart, NULL, 0},
-	// alsa
-	/*{0, XF86XK_AudioLowerVolume, spawna, ARGS("amixer", "set", "Master", "2%-"), 0},
-	{0, XF86XK_AudioRaiseVolume, spawna, ARGS("amixer", "set", "Master", "2%+"), 0},
-	{0, XF86XK_AudioMute, spawna, ARGS("amixer", "set", "Master", "toggle"), 0},
-	*/
 
-	// pulse
-	{0, XF86XK_AudioLowerVolume, spawna, ARGS("pactl", "set-sink-volume", "@DEFAULT_SINK@", "-2%"), 0},
-	{0, XF86XK_AudioRaiseVolume, spawna, ARGS("pactl", "set-sink-volume", "@DEFAULT_SINK@", "+2%"), 0},
-	{0, XF86XK_AudioMute, spawna, ARGS("pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle"), 0},
+	// alsa
+	{0, XF86XK_AudioLowerVolume, spawna, ARGS("amixer", "set", "Master", "5%-"), 0},
+	{0, XF86XK_AudioRaiseVolume, spawna, ARGS("amixer", "set", "Master", "5%+"), 0},
+	{0, XF86XK_AudioMute, spawna, ARGS("amixer", "set", "Master", "toggle"), 0},
 
 	{CMD, XF86XK_AudioMute, spawna, ARGS(terminal, "alsamixer", "-c0"), 0},
 	{SHIFT, XF86XK_AudioMute, spawn, "pavucontrol", 0},
@@ -118,8 +113,9 @@ struct hotkey hotkeys[] = {
 	{CMD|SHIFT, XK_Y, shell, "surf `xclip -o -selection clipboard`", 0},
 	{CMD|SHIFT, XK_H, spawn, "dmenu-man", 0},
 	{CMD, XK_R, dmenu_run, 0, 0},
-	{CMD, XK_W, spawn, "pass_chooser", 0},
-	{CMD|SHIFT, XK_W, spawn, "pass_qr_chooser", 0},
+	{CMD, XK_semicolon, spawna, ARGS("rofi", "-modi", "emoji", "-show", "emoji"), 0},
+	{CMD, XK_W, spawn, "/home/matt/bin/pass_chooser", 0},
+	{CMD|SHIFT, XK_W, spawn, "/home/matt/bin/pass_qr_chooser", 0},
 	{CMD|SHIFT, XK_L, spawna, ARGS("xscreensaver-command", "-lock"), 0},
 
 	{CMD, XK_minus, spawn, "psi", 0},
@@ -327,7 +323,7 @@ void screenshot(__attribute__((unused)) void *param)
 {
 	pid_t pid = fork();
 	if (pid == 0) {
-		int ret = run(ARGS("/usr/bin/scrot", "-sfo", "/tmp/screenshot.png"));
+		int ret = run(ARGS("/usr/bin/scrot", "-s", "-fo", "/tmp/screenshot.png"));
 		if (ret != 0) {
 			errx(-1, "failed to take screenshot: %d", ret);
 		}
