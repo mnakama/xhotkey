@@ -89,7 +89,7 @@ struct hotkey hotkeys[] = {
 		"/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.Previous"), 0},
 
 	{CMD, XK_F1, spawn, "firefox", 0},
-	{CMD, XK_F2, spawn, "/home/matt/bin/claws-mail", 0},
+	{CMD, XK_F2, spawn, "claws-mail", 0},
 	{CMD|SHIFT, XK_F2, spawn, "thunderbird", 0},
 	{CMD, XK_F3, spawn, "qutebrowser", 0},
 	{CMD, XK_F4, spawn, "thunar", 0},
@@ -114,8 +114,8 @@ struct hotkey hotkeys[] = {
 	{CMD|SHIFT, XK_H, spawn, "dmenu-man", 0},
 	{CMD, XK_R, dmenu_run, 0, 0},
 	{CMD, XK_semicolon, spawna, ARGS("rofi", "-modi", "emoji", "-show", "emoji"), 0},
-	{CMD, XK_W, spawn, "/home/matt/bin/pass_chooser", 0},
-	{CMD|SHIFT, XK_W, spawn, "/home/matt/bin/pass_qr_chooser", 0},
+	{CMD, XK_W, spawn, "pass_chooser", 0},
+	{CMD|SHIFT, XK_W, spawn, "pass_qr_chooser", 0},
 	{CMD|SHIFT, XK_L, spawna, ARGS("xscreensaver-command", "-lock"), 0},
 
 	{CMD, XK_minus, spawn, "psi", 0},
