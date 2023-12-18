@@ -1,7 +1,7 @@
 with import <nixpkgs> {};
 stdenv.mkDerivation rec {
   name = "xhotkey";
-  buildInputs = [ xlibsWrapper ];
+  buildInputs = [ xorg.libX11 ];
 
   #src = fetchgit {
   #  url = "https://github.com/mnakama/${name}";

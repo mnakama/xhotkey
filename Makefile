@@ -8,7 +8,7 @@ $(BIN_NAME) : xhotkey.c
 
 .PHONY : clean
 clean :
-	rm *.o $(BIN_NAME)
+	rm -f *.o $(BIN_NAME)
 .PHONY : intclean
 intclean :
-	rm *.o
+	rm -f *.o
